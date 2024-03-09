@@ -33,14 +33,15 @@ export function dbg<T>(variable: T): T {
       .stack
       ?.split("\n")
       .at(2)
-      ?.match(/file:\/\/(.*?)\)?$/)
+      ?.match(/(file:\/\/.*?)\)?$/)
       ?.at(1);
   } else if (runningInBun()) {
     modulePath = new Error()
       .stack
       ?.split("\n")
       .at(2)
-      ?.match(/\((.*?)\)/)
+      // NOTE: bun stack line and column number are wrong, so we don't use them
+      ?.match(/\((.*?):/)
       ?.at(1);
   }
 
