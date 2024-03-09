@@ -27,25 +27,29 @@ Prints a variable to stderr and return it
 @param value
 */
 export function dbg<T>(variable: T): T {
+  let modulePath;
   if (runningInDeno()) {
-    const modulePath = new Error()
+    modulePath = new Error()
       .stack
       ?.split("\n")
       .at(2)
       ?.match(/file:\/\/(.*?)\)?$/)
       ?.at(1);
-    console.warn(`[${modulePath}] var = ${variable}`);
   } else if (runningInBun()) {
-    const modulePath = new Error()
+    modulePath = new Error()
       .stack
       ?.split("\n")
       .at(2)
       ?.match(/\((.*?)\)/)
       ?.at(1);
+  }
+
+  if (modulePath) {
     console.warn(`[${modulePath}] var = ${variable}`);
   } else {
     console.warn(`var = ${variable}`);
   }
+
   return variable;
 }
 
