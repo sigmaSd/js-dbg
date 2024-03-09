@@ -20,7 +20,34 @@ let value = fn2(dbg(fn1()))
 Prints a variable and return it
 @param value
 */
-export function dbg<T>(arg: T): T {
-  console.warn(arg);
-  return arg;
+export function dbg<T>(variable: T): T {
+  if (runningInDeno()) {
+    const modulePath = new Error()
+      .stack
+      ?.split("\n")
+      .at(2)
+      ?.match(/file:\/\/(.*?)\)?$/)
+      ?.at(1);
+    console.warn(`[${modulePath}] var = ${variable}`);
+  } else if (runningInBun()) {
+    const modulePath = new Error()
+      .stack
+      ?.split("\n")
+      .at(2)
+      ?.match(/\((.*?)\)/)
+      ?.at(1);
+    console.warn(`[${modulePath}] var = ${variable}`);
+  } else {
+    console.warn(variable);
+  }
+  return variable;
+}
+
+function runningInDeno() {
+  return globalThis.Deno !== undefined;
+}
+
+function runningInBun() {
+  // deno-lint-ignore no-explicit-any
+  return (globalThis as any).Bun !== undefined;
 }
