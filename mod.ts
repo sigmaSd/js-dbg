@@ -27,23 +27,7 @@ Prints a variable to stderr and return it
 @param value
 */
 export function dbg<T>(variable: T): T {
-  let modulePath;
-  if (runningInDeno()) {
-    modulePath = new Error()
-      .stack
-      ?.split("\n")
-      .at(2)
-      ?.match(/(file:\/\/.*?)\)?$/)
-      ?.at(1);
-  } else if (runningInBun()) {
-    modulePath = new Error()
-      .stack
-      ?.split("\n")
-      .at(2)
-      // NOTE: bun stack line and column number are wrong, so we don't use them
-      ?.match(/\((.*?):/)
-      ?.at(1);
-  }
+  const modulePath = getModulePath();
 
   if (modulePath) {
     console.warn(`[${modulePath}] var = ${variable}`);
@@ -52,6 +36,25 @@ export function dbg<T>(variable: T): T {
   }
 
   return variable;
+}
+
+function getModulePath() {
+  if (runningInDeno()) {
+    return new Error()
+      .stack
+      ?.split("\n")
+      .at(2)
+      ?.match(/(file:\/\/.*?)\)?$/)
+      ?.at(1);
+  } else if (runningInBun()) {
+    return new Error()
+      .stack
+      ?.split("\n")
+      .at(2)
+      // NOTE: bun stack line and column number are wrong, so we don't use them
+      ?.match(/\((.*?):/)
+      ?.at(1);
+  }
 }
 
 function runningInDeno() {
