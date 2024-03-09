@@ -11,13 +11,19 @@ import { dbg } from "jsr:@sigma/dbg"
 
 // the nice thing is that `dbg` can be inserted anywhere
 let value = fn2(dbg(fn1()))
+
+// output: var = 4
+
+// there are some specialized outputs based on the runtime
+// for example here is the output in Deno
+// output: [/a/b/c.ts:5:14] var = 4
 ```
 
 @module
 */
 
 /**
-Prints a variable and return it
+Prints a variable to stderr and return it
 @param value
 */
 export function dbg<T>(variable: T): T {
@@ -38,7 +44,7 @@ export function dbg<T>(variable: T): T {
       ?.at(1);
     console.warn(`[${modulePath}] var = ${variable}`);
   } else {
-    console.warn(variable);
+    console.warn(`var = ${variable}`);
   }
   return variable;
 }

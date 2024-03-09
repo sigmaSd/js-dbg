@@ -13,4 +13,10 @@ import { dbg } from "jsr:@sigma/dbg";
 
 // the nice thing is that `dbg` can be inserted anywhere
 let value = fn2(dbg(fn1()));
+
+// output: var = 4
+
+// there are some specialized outputs based on the runtime
+// for example here is the output in Deno
+// output: [/a/b/c.ts:5:14] var = 4
 ```
