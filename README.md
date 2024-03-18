@@ -1,4 +1,4 @@
-# dbg
+# Debug
 
 This module exports a single function `dbg` that prints a variable and return
 it.
@@ -8,6 +8,10 @@ inserted anywhere, see below for an example.
 
 This is very useful for debugging.
 
+## Examples
+
+**Example 1**
+
 ```ts
 import { dbg } from "@sigma/dbg";
 
@@ -15,8 +19,4 @@ import { dbg } from "@sigma/dbg";
 let value = fn2(dbg(fn1()));
 
 // output: var = 4
-
-// there are some specialized outputs based on the runtime
-// for example here is the output in Deno
-// output: [file:///a/b/c.ts:5:14] var = 4
 ```
