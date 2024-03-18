@@ -44,7 +44,7 @@ function getModulePath() {
       .stack
       ?.split("\n")
       .at(2)
-      ?.match(/(file:\/\/.*?)\)?$/)
+      ?.match(/((file|https):\/\/.*?)\)?$/)
       ?.at(1);
   } else if (runningInBun()) {
     return new Error()
