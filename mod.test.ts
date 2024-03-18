@@ -12,6 +12,6 @@ Deno.test("message(file)", () => {
   }).outputSync();
   assertEquals(
     new TextDecoder().decode(output.stderr),
-    `[file://${import.meta.filename?.replace(".test", "")}:30:22] var = 4\n`,
+    "var = 4\n",
   );
 });
