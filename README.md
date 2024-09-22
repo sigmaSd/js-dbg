@@ -16,6 +16,8 @@ This is very useful for debugging.
 import { dbg } from "@sigma/dbg";
 
 // the nice thing is that `dbg` can be inserted anywhere
+const fn1 = () => 4;
+const fn2 = (n: number) => n + 1;
 let value = fn2(dbg(fn1()));
 
 // output: var = 4
