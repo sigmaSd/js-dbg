@@ -12,6 +12,6 @@ Deno.test("message(file)", () => {
   }).outputSync();
   assertEquals(
     new TextDecoder().decode(output.stderr),
-    "var = 4\n",
+    "[$deno$eval:1:31] var = 4\n",
   );
 });

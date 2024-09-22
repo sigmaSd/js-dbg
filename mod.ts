@@ -27,7 +27,32 @@ Prints a variable to stderr and return it
 @param value
 */
 export function dbg<T>(variable: T): T {
-  console.warn(`var = ${variable}`);
+  if (globalThis.Deno) {
+    dbgDeno(variable);
+  } else {
+    console.warn(`var = ${variable}`);
+  }
 
   return variable;
+}
+
+function dbgDeno(variable: unknown) {
+  const stack = new Error().stack;
+  const fileLine = stack?.split("\n")[3];
+  if (!fileLine) {
+    console.warn(`var = ${variable}`);
+    return;
+  }
+  // at file:///home/mrcool/dev/deno/dbg/mod.test.ts:8:16
+  // at c (file:///home/mrcool/dev/deno/dbg/c.ts:5:3)
+  const path = /(file:\/\/[^)]+)/.exec(fileLine)?.[1];
+  if (!path) {
+    console.warn(`var = ${variable}`);
+    return;
+  }
+  // make the path relative to the current working directory
+  // use import.meta.url to get the current working directory
+  const cwd = import.meta.url.split("/").slice(0, -1).join("/") + "/";
+  const file = path.replace(cwd, "");
+  console.warn(`[${file}] var = ${variable}`);
 }
