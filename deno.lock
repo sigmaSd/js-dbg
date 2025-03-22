@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@deno/cache-dir@0.13.2": "0.13.2",
     "jsr:@deno/emit@0.46.0": "0.46.0",
+    "jsr:@sigma/dbg@*": "1.1.7",
     "jsr:@std/assert@0.219.1": "0.219.1",
     "jsr:@std/assert@0.223": "0.223.0",
     "jsr:@std/bytes@0.223": "0.223.0",
@@ -29,6 +30,9 @@
         "jsr:@deno/cache-dir",
         "jsr:@std/path"
       ]
+    },
+    "@sigma/dbg@1.1.7": {
+      "integrity": "1eb9048e61c76193f6a29220803cfb84d1b684996a034607aaebccf2858bae1c"
     },
     "@std/assert@0.219.1": {
       "integrity": "e76c2a1799a78f0f4db7de04bdc9b908a7a4b821bb65eda0285885297d4fb8af",

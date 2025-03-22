@@ -9,7 +9,7 @@
  *
  * @example
  * ```ts
- * import dbg from "@sigma/dbg"
+ * import dbg from "jsr:@sigma/dbg@2.0.0"
  *
  * // the nice thing is that `dbg` can be inserted anywhere
  * const fn1 = () => 4;
