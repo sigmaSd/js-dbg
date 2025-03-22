@@ -13,7 +13,7 @@ This is very useful for debugging.
 **Example 1**
 
 ```ts
-import { dbg } from "@sigma/dbg";
+import dbg from "@sigma/dbg";
 
 // the nice thing is that `dbg` can be inserted anywhere
 const fn1 = () => 4;
@@ -22,3 +22,11 @@ let value = fn2(dbg(fn1()));
 
 // output: var = 4
 ```
+
+**Browsers:**
+
+Browsers and runtimes that don't support node apis, should use
+`@sigma/dbg/browser` entrypoint.
+
+Note: Bun currently does not support `util.callSites` so it should also import
+from `@sigma/dbg/browser`.

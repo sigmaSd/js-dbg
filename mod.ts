@@ -19,7 +19,8 @@
  * // output: var = 4
  * ```
  *
- * **Browser:
+ * **Browsers:**
+ *
  * Browsers and runtimes that don't support node apis, should use `@sigma/dbg/browser` entrypoint.
  *
  * Note: Bun currently does not support `util.callSites` so it should also import from `@sigma/dbg/browser`.

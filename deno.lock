@@ -4,6 +4,7 @@
     "jsr:@deno/cache-dir@0.13.2": "0.13.2",
     "jsr:@deno/emit@0.46.0": "0.46.0",
     "jsr:@sigma/dbg@*": "1.1.7",
+    "jsr:@sigma/dbg@2.0.0": "2.0.0",
     "jsr:@std/assert@0.219.1": "0.219.1",
     "jsr:@std/assert@0.223": "0.223.0",
     "jsr:@std/bytes@0.223": "0.223.0",
@@ -33,6 +34,9 @@
     },
     "@sigma/dbg@1.1.7": {
       "integrity": "1eb9048e61c76193f6a29220803cfb84d1b684996a034607aaebccf2858bae1c"
+    },
+    "@sigma/dbg@2.0.0": {
+      "integrity": "b4d513b871fb476b3e1e5b247976bd39a41397db8d51554a303ceac8008022f7"
     },
     "@std/assert@0.219.1": {
       "integrity": "e76c2a1799a78f0f4db7de04bdc9b908a7a4b821bb65eda0285885297d4fb8af",
