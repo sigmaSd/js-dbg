@@ -1,28 +1,32 @@
-import { assertEquals } from "jsr:@std/assert@0.219.1";
-import { dbg } from "./mod.ts";
+import { assertEquals, assertMatch } from "jsr:@std/assert@0.219.1";
 
-Deno.test("basic", () => {
-  assertEquals(dbg(4), 4);
-});
+for (
+  const mod of ["./mod.ts", "./mod_browser.ts"]
+) {
+  const { dbg } = await import(mod);
 
-//TODO: also test more specifiers like https
-Deno.test("message(file)", () => {
-  {
-    const output = new Deno.Command("deno", {
-      args: ["eval", "import {dbg} from './mod.ts'; dbg(4)"],
-    }).outputSync();
-    assertEquals(
-      new TextDecoder().decode(output.stderr),
-      "[$deno$eval:1:31] var = 4\n",
-    );
-  }
-  {
-    const output = new Deno.Command("deno", {
-      args: ["eval", "import {dbg} from './mod.ts'; dbg(4, {name: 'myVar'})"],
-    }).outputSync();
-    assertEquals(
-      new TextDecoder().decode(output.stderr),
-      "[$deno$eval:1:31] myVar = 4\n",
-    );
-  }
-});
+  Deno.test("basic", () => {
+    assertEquals(dbg(4), 4);
+  });
+
+  Deno.test("message(file)", () => {
+    {
+      const output = new Deno.Command("deno", {
+        args: ["eval", `import {dbg} from '${mod}'; dbg(4)`],
+      }).outputSync();
+      assertMatch(
+        new TextDecoder().decode(output.stderr),
+        /var = 4\n$/,
+      );
+    }
+    {
+      const output = new Deno.Command("deno", {
+        args: ["eval", `import {dbg} from '${mod}'; dbg(4, {name: 'myVar'})`],
+      }).outputSync();
+      assertMatch(
+        new TextDecoder().decode(output.stderr),
+        /myVar = 4\n$/,
+      );
+    }
+  });
+}
