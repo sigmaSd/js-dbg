@@ -1,5 +1,8 @@
 ## Changelog
 
+### 2.0.0
+- **feat**: dbg is now a default export.
+
 ### 1.2.0
 
 -   **feat**: Added browser support via `@sigma/dbg/browser` entrypoint. Browsers and runtimes that don't support Node.js APIs (like `util.getCallSites`) should use this entrypoint. Bun currently also needs to import from `@sigma/dbg/browser` due to lack of `util.callSites` support.

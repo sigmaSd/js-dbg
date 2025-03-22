@@ -3,7 +3,7 @@ import { assertEquals, assertMatch } from "jsr:@std/assert@0.219.1";
 for (
   const mod of ["./mod.ts", "./mod_browser.ts"]
 ) {
-  const { dbg } = await import(mod);
+  const { default: dbg } = await import(mod); // Import the default export
 
   Deno.test("basic", () => {
     assertEquals(dbg(4), 4);
@@ -12,7 +12,7 @@ for (
   Deno.test("message(file)", () => {
     {
       const output = new Deno.Command("deno", {
-        args: ["eval", `import {dbg} from '${mod}'; dbg(4)`],
+        args: ["eval", `import dbg from '${mod}'; dbg(4)`],
       }).outputSync();
       assertMatch(
         new TextDecoder().decode(output.stderr),
@@ -21,7 +21,7 @@ for (
     }
     {
       const output = new Deno.Command("deno", {
-        args: ["eval", `import {dbg} from '${mod}'; dbg(4, {name: 'myVar'})`],
+        args: ["eval", `import dbg from '${mod}'; dbg(4, {name: 'myVar'})`],
       }).outputSync();
       assertMatch(
         new TextDecoder().decode(output.stderr),

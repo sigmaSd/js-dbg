@@ -9,7 +9,7 @@
  *
  * @example
  * ```ts
- * import { dbg } from "@sigma/dbg"
+ * import dbg from "@sigma/dbg"
  *
  * // the nice thing is that `dbg` can be inserted anywhere
  * const fn1 = () => 4;
@@ -32,7 +32,10 @@ import path from "node:path";
 /**
 Prints a variable to stderr and return it
 */
-export function dbg<T>(variable: T, options: { name?: string } = {}): T {
+export default function dbg<T>(
+  variable: T,
+  options: { name?: string } = {},
+): T {
   const { name = "var" } = options;
 
   try {
