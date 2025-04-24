@@ -29,6 +29,7 @@
 
 import util from "node:util";
 import path from "node:path";
+import process from "node:process";
 
 /**
 Prints a variable to stderr and return it
@@ -38,6 +39,7 @@ export default function dbg<T>(
   options: { name?: string } = {},
 ): T {
   const { name = "var" } = options;
+  const variableStr = util.inspect(variable);
 
   try {
     const fn = util.getCallSites !== undefined
@@ -47,34 +49,34 @@ export default function dbg<T>(
     const callSites = fn();
     const caller = callSites[1]; // Get the call site of the *caller* of dbg
     if (!caller) {
-      console.warn(`${name} = ${variable}`);
+      console.warn(`${name} = ${variableStr}`);
     } else {
       const filename = caller.scriptName;
       const lineNumber = caller.lineNumber;
       const columnNumber = caller.column;
 
       if (!filename) {
-        console.warn(`${name} = ${variable}`);
+        console.warn(`${name} = ${variableStr}`);
         return variable;
       }
 
       // Use import.meta.url to get the current module's URL
-      const currentModuleUrl = import.meta.url;
+      const mainModule = "file://" + process.cwd();
 
       const relativePath = filename.startsWith("file:")
         ? path.relative(
-          new URL(".", currentModuleUrl).pathname,
+          new URL(".", mainModule).pathname,
           new URL(filename).pathname,
         )
-        : path.relative(new URL(".", currentModuleUrl).pathname, filename); // handles both file:// and regular paths
+        : path.relative(new URL(".", mainModule).pathname, filename); // handles both file:// and regular paths
 
       console.warn(
-        `[${relativePath}:${lineNumber}:${columnNumber}] ${name} = ${variable}`,
+        `[${relativePath}:${lineNumber}:${columnNumber}] ${name} = ${variableStr}`,
       );
     }
   } catch (e) {
     console.log(e);
-    console.warn(`[dbg error] ${name} = ${variable}`);
+    console.warn(`[dbg error] ${name} = ${variableStr}`);
   }
 
   return variable;
