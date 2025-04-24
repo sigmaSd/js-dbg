@@ -36,52 +36,69 @@ export default function dbg<T>(
 ): T {
   const { name = "var" } = options;
 
-  try {
-    const error = new Error();
-    const stack = error.stack;
+  // Base log prefix in case stack parsing fails
+  let logPrefix = `${name} =`;
 
-    if (!stack) {
-      console.warn(`${name} = ${variable}`);
-      return variable;
-    }
+  const error = new Error();
+  const stack = error.stack;
 
-    // Extract file, line, and column information from the stack trace
-    const stackLines = stack.split("\n");
-    // Find the line that calls dbg
-    const callerLine = stackLines[2];
-
-    if (!callerLine) {
-      console.warn(`${name} = ${variable}`);
-      return variable;
-    }
-
-    let filename = "";
-    let lineNumber = "";
-    let columnNumber = "";
-
-    // Different browsers format stack traces slightly different.  This should handle
-    // Chrome, Firefox, and Safari (and potentially others).  It's brittle in that
-    // changes to how browsers format stack traces will break this.
-    const match = callerLine.match(/at.*?\((.*?):(\d+):(\d+)\)/) || // Chrome, sometimes Edge
-      callerLine.match(/at (.*?):(\d+):(\d+)/) || // Firefox
-      callerLine.match(/(.*?):(\d+):(\d+)/); // Safari
-
-    if (match) {
-      filename = match[1] || "";
-      lineNumber = match[2] || "";
-      columnNumber = match[3] || "";
-    }
-
-    if (!filename) {
-      console.warn(`${name} = ${variable}`);
-      return variable;
-    }
-    console.warn(
-      `[${filename}:${lineNumber}:${columnNumber}] ${name} = ${variable}`,
-    );
-  } catch {
-    console.warn(`[dbg error] ${name} = ${variable}`);
+  if (!stack) {
+    // Fallback if no stack trace is available
+    console.warn(logPrefix, variable); // Pass variable separately
+    return variable;
   }
+
+  const stackLines = stack.split("\n");
+  // Index 2 is typically the caller of dbg:
+  // 0: Error message string ("Error")
+  // 1: Stack frame for the dbg() function itself
+  // 2: Stack frame for the *caller* of dbg()
+  const callerLine = stackLines[2];
+
+  if (!callerLine) {
+    // Fallback if stack trace format is unexpected
+    console.warn(logPrefix, variable); // Pass variable separately
+    return variable;
+  }
+
+  // Regex attempts to handle common stack trace formats (V8/Chrome, Firefox, Safari)
+  // It's brittle and may need adjustments for different engines or future browser versions.
+  const match = callerLine.match(/at.*?\(?(.*?):(\d+):(\d+)\)?$/) || // V8/Chrome (allow optional parens)
+    callerLine.match(/@?(.*?):(\d+):(\d+)$/); // Firefox / Safari (allow optional @)
+
+  if (match) {
+    // Extract file, line, and column
+    const rawFilename = match[1]?.trim() || "";
+    const lineNumber = match[2] || "?";
+    const columnNumber = match[3] || "?";
+
+    if (rawFilename) {
+      // Attempt to extract just the filename from URL/path for cleaner logging
+      let displayFilename = rawFilename;
+      try {
+        const lastSlash = rawFilename.lastIndexOf("/");
+        if (lastSlash !== -1) {
+          displayFilename = rawFilename.substring(lastSlash + 1);
+        }
+        // Handle potential query params or hash in URLs
+        const queryIndex = displayFilename.indexOf("?");
+        if (queryIndex !== -1) {
+          displayFilename = displayFilename.substring(0, queryIndex);
+        }
+        const hashIndex = displayFilename.indexOf("#");
+        if (hashIndex !== -1) {
+          displayFilename = displayFilename.substring(0, hashIndex);
+        }
+      } catch { /* Ignore errors during string manipulation */ }
+
+      // Update log prefix with location info
+      logPrefix =
+        `[${displayFilename}:${lineNumber}:${columnNumber}] ${name} =`;
+    }
+  }
+  // If regex didn't match or filename was empty, logPrefix remains the default
+
+  console.warn(logPrefix, variable); // Log prefix string, then the variable itself for browser inspection
 
   return variable;
 }
