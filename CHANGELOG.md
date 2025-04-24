@@ -1,5 +1,14 @@
 ## Changelog
 
+
+### 2.1.0
+
+*   **Fix**: Improved file path handling by using `process.cwd()` to resolve the main module path, ensuring accurate relative paths in debug output.
+*   **Fix**: Corrected variable representation by using `util.inspect` for more detailed and accurate string conversion.
+*   **Fix**: Improved stack trace parsing in browser environments to handle various browser formats more reliably.
+*   **Fix**: Enhanced browser logging by separating the log prefix (filename, line number, etc.) from the variable, improving browser inspection capabilities.
+*   **Fix**: Improved filename extraction from browser stack traces to display cleaner filenames, removing URL parameters and hashes.
+
 ### 2.0.0
 - **feat**: dbg is now a default export.
 
