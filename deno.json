@@ -1,6 +1,6 @@
 {
   "name": "@sigma/dbg",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "exports": {
     ".": "./mod.ts",
     "./browser": "./mod_browser.ts"
